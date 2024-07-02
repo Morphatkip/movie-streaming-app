@@ -1,31 +1,72 @@
 import axios from "axios";
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Logo from "../assets/images/nothing.jpg";
+import { SearchContext } from "../context/SearchContext";
+import "../assets/css/styles.css";
 
 function Navbar() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { setSearchResults } = useContext(SearchContext);
+  const navigate = useNavigate();
+
   const handleSearch = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.get(
-        "https://api.themoviedb.org/3/search/movie",
-        {
+      const [moviesResponse, tvResponse, multiResponse] = await Promise.all([
+        axios.get("https://api.themoviedb.org/3/search/movie", {
           params: {
             api_key: "9a2a09cb4cf2237fd864156a40c222cb",
             query: searchQuery,
           },
-        }
-      );
-      setSearchResults(response.data.results);
+        }),
+        axios.get("https://api.themoviedb.org/3/search/tv", {
+          params: {
+            api_key: "9a2a09cb4cf2237fd864156a40c222cb",
+            query: searchQuery,
+          },
+        }),
+        axios.get("https://api.themoviedb.org/3/search/multi", {
+          params: {
+            api_key: "9a2a09cb4cf2237fd864156a40c222cb",
+            query: searchQuery,
+          },
+        }),
+      ]);
+
+      const combinedResults = [
+        ...moviesResponse.data.results.map((item) => ({
+          ...item,
+          media_type: "movie",
+        })),
+        ...tvResponse.data.results.map((item) => ({
+          ...item,
+          media_type: "tv",
+        })),
+        ...multiResponse.data.results,
+      ];
+
+      setSearchResults(combinedResults);
+      navigate("/search-results");
     } catch (error) {
       console.error("Error fetching search results:", error);
     }
   };
 
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+    document.querySelector(".Header").classList.toggle("open", !isMenuOpen);
+  };
+
+  const toggleSubMenu = (event) => {
+    event.preventDefault();
+    const parentLi = event.currentTarget.parentElement;
+    parentLi.classList.toggle("active");
+  };
+
   return (
-    <header className="Header fx">
+    <header className="Header">
       <div className="cont">
         <div className="top dfx alg-cr jst-sb">
           <figure className="logo">
@@ -33,8 +74,6 @@ function Navbar() {
               <img
                 src={Logo}
                 alt="FiretipsEdu"
-                width="100%"
-                height="100%"
                 style={{
                   height: "2.2rem",
                   width: "auto",
@@ -44,9 +83,8 @@ function Navbar() {
               />
             </Link>
           </figure>
-          <span className="MenuBtn aa-tgl"></span>
-          <span className="MenuBtnClose aa-tgl"></span>
-          <div className="Rght BgA dfxc alg-cr fg1">
+          <span className="MenuBtn aa-tgl" onClick={toggleMenu}></span>
+          <div className={`Rght BgA dfxc alg-cr fg1`}>
             <div className="Search">
               <form onSubmit={handleSearch}>
                 <span className="Form-Icon">
@@ -59,7 +97,7 @@ function Navbar() {
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
                   <button type="submit">
-                    <i className="fa-search"></i>
+                    <i className="fa fa-search"></i>
                   </button>
                 </span>
               </form>
@@ -70,7 +108,9 @@ function Navbar() {
                   <Link to="/home"> Home</Link>
                 </li>
                 <li className="AAIco-trending_up menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-1954">
-                  <a href="#">Movies</a>
+                  <a href="#" onClick={toggleSubMenu}>
+                    Movies
+                  </a>
                   <ul className="sub-menu">
                     <li className="menu-item menu-item-type-custom menu-item-object-custom menu-item-1990">
                       <Link to="/movies/featured">Featured</Link>
@@ -87,7 +127,9 @@ function Navbar() {
                   </ul>
                 </li>
                 <li className="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-10070">
-                  <a href="#">TV series</a>
+                  <a href="#" onClick={toggleSubMenu}>
+                    TV series
+                  </a>
                   <ul className="sub-menu">
                     <li className="menu-item menu-item-type-custom menu-item-object-custom menu-item-42306">
                       <Link to="/tv-series/popular">Popular TV Series</Link>
@@ -103,7 +145,9 @@ function Navbar() {
                   </ul>
                 </li>
                 <li className="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-1953">
-                  <a href="#">Genres</a>
+                  <a href="#" onClick={toggleSubMenu}>
+                    Genres
+                  </a>
                   <ul className="sub-menu">
                     <li className="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-28">
                       <Link to="/genre/movies/28">Action Movies</Link>

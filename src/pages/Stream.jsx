@@ -8,7 +8,7 @@ function Stream({ movies }) {
   const location = useLocation();
 
   const { movie } = location?.state;
-
+  console.log(movie);
   const {
     adult,
     backdrop_path,

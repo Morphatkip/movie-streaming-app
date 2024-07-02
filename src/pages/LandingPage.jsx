@@ -33,7 +33,7 @@ function LandingPage() {
                   autocomplete="off"
                 />
                 <button
-                  style={{ backgroundColor: "#00ff00" }}
+                  style={{ backgroundColor: " #00e1ff" }}
                   className="search_lg-btn"
                   type="submit"
                   aria-label="Please select Movies or TV-Shows..."
@@ -164,7 +164,8 @@ function LandingPage() {
       <br />
       <p className="cuevana_enter">
         <a className="cuevana_enter-btn Button" href="/home/">
-          <i className="fa-arrow-circle-right"></i>&nbsp;123Movies, Click here
+          <i className="fa-arrow-circle-right"></i>&nbsp;Movies Centre, Click
+          here
         </a>
       </p>
       <Footer />
@@ -327,13 +328,10 @@ const MovieContainer = ({ movie }) => {
     vote_average,
     vote_count,
   } = movie;
-  // Assuming dateStr contains the date string "2024-04-19"
+
   const dateStr = release_date;
 
-  // Create a new Date object with the date string
   const date = new Date(dateStr);
-
-  // Get the year from the date object
   const year = date.getFullYear();
   return (
     <li className="xxx TPostMv">

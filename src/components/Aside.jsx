@@ -92,7 +92,7 @@ function Aside() {
     <aside className="widget-area">
       <br />
       <div id="peli_top_estrenos-2" className="Wdgt peli_top_estrenos">
-        <div className="Title widget-title">Trending 123MOVIES</div>
+        <div className="Title widget-title">Trending MOVIES</div>
         <ul className="MovieList top">
           {trendingMovies.map((movie) => (
             <MovieContainer movie={movie} />

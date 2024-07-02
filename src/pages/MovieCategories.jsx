@@ -28,7 +28,7 @@ function MovieCategories({ handleSetPage, movies, title }) {
   };
 
   return (
-    <div>
+    <div className="bg-dark text-light">
       <div className="aa-wp">
         <div className="bd">
           <Navbar />

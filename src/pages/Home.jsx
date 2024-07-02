@@ -25,7 +25,7 @@ function Home() {
             params: {
               api_key: "9a2a09cb4cf2237fd864156a40c222cb",
               sort_by: "popularity.desc",
-              page: page, // Include the page parameter
+              page: page,
             },
           }
         );
@@ -97,14 +97,14 @@ function Home() {
   };
 
   return (
-    <body className="slider">
+    <body className="bg-dark text-light">
       <div className="aa-wp">
-        <div className="fx">
+        <div className="fx ">
           <Navbar />
         </div>
 
         <div className="bd">
-          <div className="MovieListSldCn">
+          <div className="mt-3">
             <Slider />
           </div>
           <section className="category-list-bx cont">
